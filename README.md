@@ -1,16 +1,30 @@
-# 🚀 NyxRelay — راهنمای استقرار روی Hugging Face Spaces
+---
+title: NyxRelay
+emoji: ⚡
+colorFrom: blue
+colorTo: purple
+sdk: docker
+pinned: false
+license: mit
+app_port: 7860
+---
 
-> این راهنما به شما نشان می‌دهد چطور پنل **NyxRelay** را روی [Hugging Face Spaces](https://huggingface.co/spaces) آپلود کنید، وارد سایت شوید و آدرس (URL) پنل را پیدا کنید.
+# ⚡ NyxRelay — راهنمای استقرار روی Hugging Face Spaces
+
+> پروژه NyxRelay یک پنل مدیریت تونل مبتنی بر **FastAPI + WebSocket** است که با **Docker** اجرا می‌شود.  
+> این راهنما گام‌به‌گام توضیح می‌دهد چطور آن را روی Hugging Face Spaces دیپلوی کنید، وارد شوید و آدرس دامنه را پیدا کنید.
 
 ---
 
-## 📋 پیش‌نیازها
+## 📁 ساختار فایل‌های پروژه
 
-قبل از شروع باید موارد زیر را داشته باشید:
-
-- یک حساب کاربری رایگان روی [huggingface.co](https://huggingface.co)
-- فایل `NyxRelay.html` که پنل شماست
-- مرورگر مدرن (Chrome / Firefox / Edge)
+```
+hf-ren1/
+├── app.py              ← سرور اصلی FastAPI (117 KB)
+├── Dockerfile          ← تعریف محیط Docker
+├── requirements.txt    ← کتابخانه‌های Python
+└── README.md           ← همین فایل
+```
 
 ---
 
@@ -18,78 +32,81 @@
 
 اگر حساب ندارید:
 
-1. به آدرس [https://huggingface.co/join](https://huggingface.co/join) بروید
+1. به آدرس **https://huggingface.co/join** بروید
 2. **Username**، **Email** و **Password** را وارد کنید
 3. روی **Create Account** کلیک کنید
-4. ایمیل تأیید را چک کنید و حساب را فعال کنید
+4. ایمیل تأیید را چک کرده و حساب را فعال کنید
 
 ---
 
-## 2️⃣ ساخت یک Space جدید
+## 2️⃣ ساخت Space جدید با SDK = Docker
 
-یک **Space** در Hugging Face مثل یک سرور رایگان است که فایل‌های شما را هاست می‌کند.
-
-### مرحله به مرحله:
+> ⚠️ **مهم:** چون پروژه از FastAPI و Python استفاده می‌کند، باید SDK را **Docker** انتخاب کنید — نه Static یا Gradio.
 
 1. وارد حساب خود شوید
-2. از منوی بالا روی **+** کلیک کنید، سپس **New Space** را انتخاب کنید
-
-   یا مستقیم به این آدرس بروید:
+2. روی **+** در نوار بالا کلیک کنید → **New Space**  
+   یا مستقیم به آدرس زیر بروید:
    ```
    https://huggingface.co/new-space
    ```
 
-3. فرم ایجاد Space را پر کنید:
+3. فرم را این‌گونه پر کنید:
 
-   | فیلد | مقدار پیشنهادی |
-   |------|----------------|
-   | **Space name** | `nyxrelay-panel` |
+   | فیلد | مقدار |
+   |------|-------|
+   | **Owner** | نام کاربری شما |
+   | **Space name** | `nyxrelay` (یا هر نام دلخواه) |
    | **License** | `mit` |
-   | **SDK** | `Static` ← **این مهم است** |
-   | **Visibility** | `Public` (رایگان) یا `Private` (پولی) |
+   | **SDK** | **Docker** ← حتماً این را انتخاب کنید |
+   | **Visibility** | `Public` (رایگان) |
 
 4. روی **Create Space** کلیک کنید
 
-> ✅ **چرا SDK = Static?** چون فایل ما یک HTML خالص است و نیاز به Python یا سرور ندارد.
-
 ---
 
-## 3️⃣ آپلود فایل NyxRelay.html
+## 3️⃣ آپلود فایل‌های پروژه
 
-### روش اول — آپلود مستقیم از مرورگر (ساده‌ترین روش):
+بعد از ساخت Space، باید ۴ فایل را آپلود کنید.
 
-1. بعد از ساخت Space، وارد صفحه آن شوید
+### روش اول — آپلود از طریق مرورگر (ساده‌ترین روش):
+
+1. وارد صفحه Space خود شوید
 2. روی تب **Files** کلیک کنید
-3. دکمه **Add file** → **Upload files** را بزنید
-4. فایل `NyxRelay.html` را انتخاب کنید
-5. **نام فایل را حتماً به `index.html` تغییر دهید** (قبل یا بعد از آپلود)
-
-   > ⚠️ اگر نام فایل `index.html` نباشد، سایت نمایش داده نمی‌شود!
-
-6. در قسمت **Commit changes** یک پیام بنویسید مثل:
+3. دکمه **Add file** ← **Upload files** را بزنید
+4. هر ۴ فایل را با هم انتخاب کنید:
+   - `app.py`
+   - `Dockerfile`
+   - `requirements.txt`
+   - `README.md`
+5. در باکس **Commit changes** بنویسید:
    ```
-   Add NyxRelay panel
+   Initial deploy
    ```
-7. روی **Commit changes to main** کلیک کنید
+6. روی **Commit changes to main** کلیک کنید
+
+> ✅ Hugging Face بعد از هر commit به‌صورت خودکار Docker را Build می‌کند.
 
 ---
 
-### روش دوم — آپلود با Git (برای کاربران پیشرفته‌تر):
+### روش دوم — آپلود با Git (برای کاربران پیشرفته):
 
 ```bash
-# ۱. نصب git-lfs
+# ۱. نصب git-lfs (اگر ندارید)
 git lfs install
 
-# ۲. کلون کردن Space
-git clone https://huggingface.co/spaces/YOUR_USERNAME/nyxrelay-panel
+# ۲. کلون کردن Space خالی
+git clone https://huggingface.co/spaces/YOUR_USERNAME/nyxrelay
+cd nyxrelay
 
-# ۳. کپی فایل
-cd nyxrelay-panel
-cp /path/to/NyxRelay.html index.html
+# ۳. کپی کردن فایل‌های پروژه به داخل پوشه
+cp /path/to/hf-ren1/app.py .
+cp /path/to/hf-ren1/Dockerfile .
+cp /path/to/hf-ren1/requirements.txt .
+cp /path/to/hf-ren1/README.md .
 
 # ۴. آپلود
-git add index.html
-git commit -m "Add NyxRelay panel"
+git add .
+git commit -m "Initial deploy"
 git push
 ```
 
@@ -97,100 +114,119 @@ git push
 
 ---
 
-## 4️⃣ پیدا کردن آدرس (URL) پنل
+## 4️⃣ صبر کردن برای Build
 
-بعد از آپلود، آدرس پنل شما به این فرمت است:
+بعد از آپلود، Hugging Face شروع به Build کردن Docker image می‌کند:
+
+1. وارد صفحه Space شوید
+2. روی تب **App** کلیک کنید
+3. یک لوگوی چرخنده یا پیام **Building** می‌بینید
+4. معمولاً **۱ تا ۳ دقیقه** طول می‌کشد
+5. وقتی پیام **Running** سبز رنگ نمایش داده شد، پنل آماده است
+
+> اگر بعد از ۵ دقیقه هنوز در حال Build بود، تب **Logs** را چک کنید تا خطا ببینید.
+
+---
+
+## 5️⃣ پیدا کردن آدرس (URL) پنل
+
+آدرس Space شما به این فرمت است:
 
 ```
-https://YOUR_USERNAME-nyxrelay-panel.hf.space
+https://YOUR_USERNAME-nyxrelay.hf.space
 ```
 
 ### مثال:
-اگر نام کاربری شما `john123` باشد و Space را `nyxrelay-panel` نامیدید:
+اگر نام کاربری شما `john123` باشد و Space را `nyxrelay` نامیدید:
 ```
-https://john123-nyxrelay-panel.hf.space
+https://john123-nyxrelay.hf.space
 ```
 
 ### چطور آدرس دقیق را پیدا کنید:
 
-1. وارد صفحه Space خود شوید
-2. روی تب **App** کلیک کنید
-3. آدرس نوار مرورگر همان URL پنل شماست
-4. یا روی آیکون **⋮** (سه نقطه) بالای Space کلیک کنید و **Embed this Space** را بزنید — URL مستقیم آنجاست
+- تب **App** را باز کنید — آدرس نوار مرورگر همان URL است
+- یا روی آیکون **⋮** (سه نقطه) بالای Space کلیک کنید → **Embed this Space** — لینک مستقیم آنجاست
+- یا در صفحه Space، روی دکمه **↗ Open in full page** کلیک کنید
 
 ---
 
-## 5️⃣ ورود به پنل NyxRelay
+## 6️⃣ ورود به پنل NyxRelay
 
-بعد از باز کردن آدرس:
-
-1. صفحه Login نمایش داده می‌شود
-2. اطلاعات پیش‌فرض ورود:
+1. آدرس Space را در مرورگر باز کنید
+2. به صورت خودکار به `/login` هدایت می‌شوید
+3. اطلاعات پیش‌فرض ورود:
 
    | فیلد | مقدار پیش‌فرض |
    |------|----------------|
    | **Username** | `admin` |
    | **Password** | `admin` |
 
-3. روی **Sign In** کلیک کنید
+4. روی **Sign In** کلیک کنید و وارد داشبورد می‌شوید
 
-> ⚠️ **مهم:** بلافاصله بعد از اولین ورود، از بخش **Admin** در منوی کناری، رمز عبور را تغییر دهید!
+> ⚠️ **مهم:** بلافاصله بعد از اولین ورود رمز عبور را تغییر دهید!
 
 ---
 
-## 🔒 تغییر رمز عبور (ضروری)
+## 7️⃣ تغییر رمز عبور (ضروری)
+
+1. از داشبورد، بخش **Settings** را باز کنید
+2. فیلدهای **Current Password**، **New Password** و **Confirm** را پر کنید
+3. روی **Change Password** کلیک کنید
+
+رمز جدید فوری اعمال می‌شود و session های قدیمی باطل می‌گردند.
+
+---
+
+## 8️⃣ تنظیم متغیرهای محیطی (اختیاری اما پیشنهادی)
+
+برای امنیت بیشتر، می‌توانید مقادیر پیش‌فرض را از طریق **Environment Variables** تغییر دهید:
+
+1. در صفحه Space روی **Settings** کلیک کنید
+2. بخش **Repository secrets** یا **Variables** را پیدا کنید
+3. متغیرهای زیر را اضافه کنید:
+
+   | متغیر | توضیح | مثال |
+   |-------|-------|------|
+   | `ADMIN_USERNAME` | نام کاربری ادمین | `myadmin` |
+   | `ADMIN_PASSWORD` | رمز عبور اولیه | `MyStr0ngPass!` |
+   | `SECRET_KEY` | کلید رمزنگاری session | یک رشته تصادفی طولانی |
+   | `PANEL_VERSION` | نسخه نمایشی پنل | `v1.0.0` |
+
+> ⚠️ **توجه:** بعد از تغییر متغیرها، Space را Restart کنید تا اعمال شوند.
+
+---
+
+## 9️⃣ پیدا کردن دامنه برای استفاده در VLESS
+
+پنل NyxRelay لینک‌های VLESS می‌سازد که به دامنه شما نیاز دارند.
+
+### دامنه پیش‌فرض (رایگان):
+
+آدرس `hf.space` شما خودکار شناسایی می‌شود:
+```
+YOUR_USERNAME-nyxrelay.hf.space
+```
+
+### تنظیم دامنه سفارشی در پنل:
 
 1. وارد پنل شوید
-2. از سایدبار روی **Admin** کلیک کنید
-3. نام کاربری و رمز جدید را وارد کنید
-4. روی **Save Admin Account** کلیک کنید
+2. به بخش **Addresses / Domain** بروید
+3. دامنه اختصاصی خود را وارد کنید (اگر دارید)
+4. روی **Save** کلیک کنید
 
-اطلاعات جدید در مرورگر شما ذخیره می‌شود (`localStorage`).
+لینک VLESS به‌صورت خودکار با دامنه جدید به‌روز می‌شود.
 
----
+### اگر دامنه اختصاصی دارید:
 
-## ⚙️ تنظیمات اختیاری Space
+برای استفاده از دامنه خودتان (مثلاً `relay.example.com`) به‌جای `hf.space`:
 
-### Private کردن Space (پیشنهادی برای امنیت):
+1. در DNS پنل دامنه‌تان یک رکورد **CNAME** بسازید:
+   ```
+   relay.example.com  →  YOUR_USERNAME-nyxrelay.hf.space
+   ```
+2. دامنه را در بخش **Settings → Custom Domain** پنل وارد کنید
 
-1. به تنظیمات Space بروید: **Settings** → **Change visibility**
-2. گزینه **Private** را انتخاب کنید
-3. این کار نیاز به حساب **Pro** دارد (ماهی ~۹ دلار)
-
-### دامنه اختصاصی:
-
-Hugging Face Spaces در حال حاضر دامنه اختصاصی (custom domain) ارائه نمی‌دهد.  
-اما می‌توانید:
-
-- آدرس `hf.space` را در یک **iframe** داخل سایت خودتان قرار دهید
-- یا از **Cloudflare Workers** به عنوان Reverse Proxy استفاده کنید تا آدرس خودتان را روی آن بگذارید
-
----
-
-## ❓ سوالات متداول
-
-**Q: آیا داده‌ها بعد از بستن مرورگر از بین می‌روند؟**  
-A: خیر. تمام اطلاعات (inbound ها، کلاینت‌ها) در `localStorage` مرورگر ذخیره می‌شود و ماندگار است.
-
-**Q: آیا می‌توانم از گوشی هم وارد شوم؟**  
-A: بله. پنل کاملاً Responsive است و روی موبایل هم کار می‌کند.
-
-**Q: Space چقدر طول می‌کشد تا راه‌اندازی شود؟**  
-A: معمولاً ۳۰ ثانیه تا ۲ دقیقه. اگر خطا دید، چند دقیقه صبر کنید و صفحه را Refresh کنید.
-
-**Q: آیا استفاده رایگان است؟**  
-A: بله. Static Spaces در Hugging Face کاملاً رایگان است.
-
----
-
-## 📁 ساختار فایل‌ها
-
-برای یک Space درست، Space شما باید این فایل را داشته باشد:
-
-```
-your-space/
-└── index.html   ← فایل NyxRelay.html با نام تغییر یافته
-```
+> ⚠️ Hugging Face در حال حاضر Custom Domain رسمی برای Spaces ارائه نمی‌دهد. CNAME یک روش غیررسمی است و ممکن است TLS آن کار نکند. برای کار درست از Cloudflare Proxy استفاده کنید.
 
 ---
 
@@ -198,15 +234,31 @@ your-space/
 
 | مشکل | راه‌حل |
 |------|--------|
-| صفحه سفید نمایش داده می‌شود | مطمئن شوید نام فایل `index.html` است |
-| خطای 404 | چند دقیقه صبر کنید، Space هنوز در حال Build است |
-| اطلاعات ذخیره نمی‌شود | مطمئن شوید مرورگر در حالت Private/Incognito نیست |
-| رمز عبور را فراموش کردم | در Console مرورگر بنویسید: `localStorage.setItem('nyx-admin','{"user":"admin","pass":"admin"}')` سپس صفحه را Reload کنید |
+| پنل Build نمی‌شود | تب **Logs** را بررسی کنید؛ معمولاً خطای pip install است |
+| صفحه خالی یا خطای 502 | چند دقیقه صبر کنید، سپس Space را از Settings → Restart کنید |
+| خطای `Module not found` | مطمئن شوید `requirements.txt` آپلود شده |
+| رمز عبور فراموش شد | در Settings متغیر `ADMIN_PASSWORD` را تغییر دهید و Restart کنید |
+| لینک VLESS اشتباه است | در پنل → Domain، آدرس `hf.space` خود را به‌صورت دستی وارد کنید |
+| Space بعد از مدتی خاموش می‌شود | HF Spaces رایگان بعد از عدم استفاده Sleep می‌کنند؛ پنل Keep-Alive داخلی دارد اما ممکن است کافی نباشد |
+
+---
+
+## 📋 چک‌لیست نهایی
+
+قبل از استفاده، همه موارد زیر را تیک بزنید:
+
+- [ ] Space با SDK = **Docker** ساخته شده
+- [ ] هر ۴ فایل آپلود شده‌اند (`app.py`, `Dockerfile`, `requirements.txt`, `README.md`)
+- [ ] Status در تب App برابر **Running** (سبز) است
+- [ ] با `admin` / `admin` وارد شده‌اید
+- [ ] رمز عبور تغییر داده شده
+- [ ] دامنه `hf.space` در بخش Domain پنل تأیید شده
 
 ---
 
 <div align="center">
 
-ساخته شده با ❤️ — **NyxRelay Panel**
+**⚡ NyxRelay** — Advanced Proxy Management Panel  
+FastAPI · WebSocket · Docker · Hugging Face Spaces
 
 </div>
