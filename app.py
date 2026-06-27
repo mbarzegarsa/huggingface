@@ -61,7 +61,7 @@ _net_baseline = {"bytes_sent": 0, "bytes_recv": 0, "ts": time.time()}
 LINKS: dict = {}
 LINKS_LOCK = asyncio.Lock()
 
-CUSTOM_ADDRESSES: list = ["www.speedtest.net"]
+CUSTOM_ADDRESSES: list = ["amazonaws.com"]
 CUSTOM_ADDRESSES_LOCK = asyncio.Lock()
 
 CUSTOM_DOMAIN: str = ""
